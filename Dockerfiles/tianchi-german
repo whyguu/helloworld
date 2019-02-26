@@ -1,0 +1,54 @@
+FROM nvidia/cuda:9.0-cudnn7-runtime-ubuntu16.04
+
+LABEL maintainer="Piercing Eye" contact="25381724@qq.com"
+
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends \
+		apt-utils \
+		build-essential \
+		cmake \
+		git \
+		vim \
+		zlib1g-dev\  # for python make install
+		wget
+
+RUN wget https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tgz && \
+	tar -zxvf Python-3.6.8.tgz && \
+	cd Python-3.6.8 && \
+	./configure --enable-optimizations && \
+	make -j4 && \
+	make install \
+	ln -s /usr/local/bin/python3 /usr/local/bin/python
+
+
+
+# zcm
+RUN pip3 install pip -U && \
+	pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+RUN pip3 install bcolz && \
+	pip3 install bottleneck && \
+	pip3 install dataclasses && \
+	pip3 install beautifulsoup4 && \
+	pip3 install matplotlib && \
+	pip3 install numexpr && \
+	pip3 install numpy>=1.12 && \
+	pip3 install nvidia-ml-py3 && \
+	pip3 install pandas && \
+	pip3 install packaging && \
+	pip3 install Pillow && \
+	pip3 install pyyaml && \
+	pip3 install requests && \
+	pip3 install scipy && \
+	pip3 install torch>=1.0.0 && \
+	pip3 install torchvision
+
+
+
+# RUN	for req in $(cat python/requirements.txt) pydot; do pip install $req; done
+
+WORKDIR /workspace
+
+# ENV HAHA='haha'
+
+CMD /bin/bash
